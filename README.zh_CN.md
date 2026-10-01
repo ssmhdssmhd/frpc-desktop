@@ -127,11 +127,14 @@
 > 由本仓库 GitHub Actions 云端编译（工作流：`.github/workflows/android.yml`）。
 
 - **如何获取 APK**：进入仓库 `Actions` → 选择 `Android APK 云端构建` → `Run workflow` 手动触发；构建完成后自动创建 Release `mobile.vX.Y.Z` 并附带 APK 安装包。
-- **APK 命名**：`FrpcDesktop.<版本号>.<时间戳>.apk`（例如 `FrpcDesktop.1.2.7.20261001000000.apk`）。
+- **APK 命名**：`FrpcDesktop.<版本号>.<时间戳>.apk`（例如 `FrpcDesktop.1.2.8.20261002000000.apk`）。
 - **说明**：当前为前端 UI 的 WebView 打包体验版。frp 进程管理、本地存储、下载等核心能力依赖 Electron 原生 API，移动端暂未完整支持，仅用于体验界面。
 - **图标**：来自 [MXLOGO](https://github.com/ssmhdssmhd/MXLOGO) 仓库。
 
 ## 📝 更新日志（本仓库）
+
+### 2026-10-02
+- 📱 手机端布局优化：窄屏（Capacitor WebView）自动整页等比缩放，内容不再拥挤/截断。发布 v1.2.8。
 
 ### 2026-10-01
 - ✨ 新增 Android APK 云端构建工作流（Capacitor WebView 体验版），支持手动触发云端编译并自动发布 APK。

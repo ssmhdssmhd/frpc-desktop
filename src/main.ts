@@ -12,6 +12,10 @@ import { installElementPlus } from "./plugins/elementPlus";
 import router from "./router";
 import { useSystemUsageStore } from "./store/systemUsage";
 import "./styles/index.scss";
+import { applyMobileScale } from "@/utils/mobileScale";
+
+// 手机端（Capacitor）窄屏整页缩放适配
+applyMobileScale();
 
 const pinia = createPinia();
 

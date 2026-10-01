@@ -62,6 +62,7 @@ Run command: `sudo xattr -cr Frpc-Desktop.app`
 
 ## Milestones
 
+- 2026-10-02: Released v1.2.8 Mobile layout auto-scale for phone screens (APK)
 - 2026-05-21: Released v1.2.6 Added download proxy selection
 - 2026-03-26: Released v1.2.5 Fixed known bugs
 - 2025-09-10: Released v1.2.3 Fixed known bugs, Supports proxy protocol, Optimize performance
@@ -130,11 +131,14 @@ No advertisements allowed!!!
 > Built in the cloud by GitHub Actions on this repo (workflow: `.github/workflows/android.yml`).
 
 - **Get the APK**: go to `Actions` → `Android APK 云端构建` → `Run workflow`; after the build finishes, a Release `mobile.vX.Y.Z` is created automatically with the APK attached.
-- **APK naming**: `FrpcDesktop.<version>.<timestamp>.apk` (e.g. `FrpcDesktop.1.2.7.20261001000000.apk`).
+- **APK naming**: `FrpcDesktop.<version>.<timestamp>.apk` (e.g. `FrpcDesktop.1.2.8.20261002000000.apk`).
 - **Note**: this is a WebView wrapper of the frontend UI for preview. frp process management, local storage and downloads rely on Electron native APIs, so the mobile build is not fully functional yet.
 - **Icon**: from [MXLOGO](https://github.com/ssmhdssmhd/MXLOGO).
 
 ## 📝 Update Log (this repo)
+
+### 2026-10-02
+- 📱 Mobile layout optimization: auto-scale the whole page to fit narrow phone screens (Capacitor WebView), so content no longer looks cramped/truncated. Released v1.2.8.
 
 ### 2026-10-01
 - ✨ Added Android APK cloud build workflow (Capacitor WebView preview build); trigger it manually to compile and auto-publish the APK.
