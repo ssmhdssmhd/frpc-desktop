@@ -28,8 +28,16 @@ jobs:
           distribution: temurin
           java-version: "21"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      # ubuntu-latest 已预装 Android SDK（ANDROID_HOME 已设置、许可已接受），
+      # 缺失的 platform/build-tools 由 Gradle 自动下载，无需 setup-android 步骤。
+      - name: Accept Android SDK licenses (safety)
+        run: |
+          SDKMANAGER=$(ls "$ANDROID_SDK_ROOT"/cmdline-tools/*/bin/sdkmanager 2>/dev/null | head -1)
+          if [ -n "$SDKMANAGER" ]; then
+            yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
+          fi
+        env:
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_SDK_ROOT }}
 
       - name: Rewrite SSH git URLs to HTTPS
         run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
