@@ -42,6 +42,10 @@
     "electron:generate-icons": "electron-icon-builder --input=./public/logo.png --output=build --flatten"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
     "@iconify-icons/material-symbols": "^1.2.58",
     "@iconify/vue": "^5.0.0",
     "@tailwindcss/postcss": "^4.1.16",

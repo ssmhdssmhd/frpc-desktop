@@ -1,0 +1,92 @@
+name: Android APK 云端构建
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: "npm"
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Rewrite SSH git URLs to HTTPS
+        run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+          npm_config_fetch_retries: 5
+          npm_config_fetch_retry_mintimeout: 10000
+          npm_config_fetch_retry_maxtimeout: 60000
+        timeout-minutes: 15
+
+      - name: Build web (vite + electron)
+        run: npm run build
+
+      - name: Add Android platform (Capacitor)
+        run: npx cap add android
+
+      - name: Generate app icons (from MXLOGO resources)
+        run: npx capacitor-assets generate --android --iconBackgroundColor '#0B0E14' --splashBackgroundColor '#0B0E14'
+
+      - name: Build APK (debug, 云端编译)
+        run: cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+        timeout-minutes: 40
+
+      - name: Rename APK (文件名.版本号.时间, 不使用横杠)
+        run: |
+          TS=$(date -u +%Y%m%d%H%M%S)
+          VER=$(node -p "require('./package.json').version")
+          cp android/app/build/outputs/apk/debug/app-debug.apk "FrpcDesktop.${VER}.${TS}.apk"
+          echo "APK_FILE=FrpcDesktop.${VER}.${TS}.apk" >> "$GITHUB_ENV"
+
+      - name: Upload APK 构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: FrpcDesktop-APK
+          path: FrpcDesktop.*.apk
+          retention-days: 14
+
+      - name: 创建/更新 Release 并上传 APK
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="mobile.v${VER}"
+            TITLE="FrpcDesktop 手机版 v${VER}（WebView 体验版）"
+          else
+            TAG="${{ github.ref_name }}"
+            TITLE="FrpcDesktop v${VER}"
+          fi
+          NOTES="FrpcDesktop 手机版（Android APK）WebView 体验版
+
+          - 版本：v${VER}
+          - 构建：GitHub Actions 云端编译（.github/workflows/android.yml）
+          - 图标：MXLOGO 仓库
+          - 说明：当前为前端 UI 的 WebView 打包体验版；frp 进程管理、本地存储等依赖 Electron 原生能力，移动端暂未完整支持。"
+          gh release create "$TAG" --title "$TITLE" --notes "$NOTES" --latest 2>/dev/null || true
+          gh release upload "$TAG" "$APK_FILE" --clobber

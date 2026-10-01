@@ -125,6 +125,21 @@ No advertisements allowed!!!
   <img src="https://contrib.rocks/image?repo=luckjiawei/frpc-desktop" />
 </a>
 
+## 📱 Android APK (Mobile experience build)
+
+> Built in the cloud by GitHub Actions on this repo (workflow: `.github/workflows/android.yml`).
+
+- **Get the APK**: go to `Actions` → `Android APK 云端构建` → `Run workflow`; after the build finishes, a Release `mobile.vX.Y.Z` is created automatically with the APK attached.
+- **APK naming**: `FrpcDesktop.<version>.<timestamp>.apk` (e.g. `FrpcDesktop.1.2.7.20261001000000.apk`).
+- **Note**: this is a WebView wrapper of the frontend UI for preview. frp process management, local storage and downloads rely on Electron native APIs, so the mobile build is not fully functional yet.
+- **Icon**: from [MXLOGO](https://github.com/ssmhdssmhd/MXLOGO).
+
+## 📝 Update Log (this repo)
+
+### 2026-10-01
+- ✨ Added Android APK cloud build workflow (Capacitor WebView preview build); trigger it manually to compile and auto-publish the APK.
+- 🎨 APK icon taken from the MXLOGO repo.
+
 ## License
 
 [MIT](LICENSE)
